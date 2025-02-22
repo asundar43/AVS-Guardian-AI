@@ -10,9 +10,8 @@ app.use(express.json());
 // Example endpoint to fetch validator performance data using Dune Analytics (EigenLayer)
 app.get('/api/performance', async (req, res) => {
     try {
-        // Replace with your actual Dune query endpoint and parameters.
-        const response = await axios.get('https://api.dune.com/api/v1/query/YOUR_QUERY_ID/execute', {
-            params: { api_key: process.env.DUNE_API_KEY }
+        const response = await axios.get('https://api.dune.com/api/v1/eigenlayer/avs-metadata', {
+            headers: { 'X-Dune-Api-Key': process.env.DUNE_API_KEY }
         });
         res.json(response.data);
     } catch (error) {
@@ -63,6 +62,17 @@ app.get('/api/score', async (req, res) => {
         res.json({ totalScore });
     } catch (error) {
         res.status(500).send('Error calculating score: ' + error.toString());
+    }
+});
+
+app.get('/api/test-dune', async (req, res) => {
+    try {
+        const response = await axios.get('https://api.dune.com/api/v1/eigenlayer/avs-metadata', {
+            headers: { 'X-Dune-Api-Key': process.env.DUNE_API_KEY }
+        });
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).send('Error testing Dune API: ' + error.toString());
     }
 });
 
