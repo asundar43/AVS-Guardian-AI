@@ -2,6 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
+const { request, gql } = require('graphql-request');
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -73,6 +74,32 @@ app.get('/api/test-dune', async (req, res) => {
         res.json(response.data);
     } catch (error) {
         res.status(500).send('Error testing Dune API: ' + error.toString());
+    }
+});
+
+// Example endpoint to fetch Uniswap V3 data using graphql-request
+app.get('/api/uniswapv3', async (req, res) => {
+    const endpoint = `https://gateway.thegraph.com/api/${process.env.UNISWAP_API_KEY}/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV`;
+
+    const query = gql`
+    {
+      factories(first: 5) {
+        id
+        poolCount
+        txCount
+        totalVolumeUSD
+      }
+      bundles(first: 5) {
+        id
+        ethPriceUSD
+      }
+    }`;
+
+    try {
+        const data = await request(endpoint, query);
+        res.json(data);
+    } catch (error) {
+        res.status(500).send('Error fetching Uniswap V3 data: ' + error.toString());
     }
 });
 
