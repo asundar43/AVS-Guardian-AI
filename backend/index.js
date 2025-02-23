@@ -56,6 +56,18 @@ app.get('/api/test-dune', async (req, res) => {
     }
 });
 
+// New endpoint to handle Uniswap V4 hook data
+app.post('/api/uniswap-hook', async (req, res) => {
+    try {
+        const hookData = req.body;
+        // Process the hook data (e.g., store in database, analyze, etc.)
+        // Example: console.log(hookData);
+        res.status(200).send('Hook data received and processed');
+    } catch (error) {
+        res.status(500).send('Error processing Uniswap hook data: ' + error.toString());
+    }
+});
+
 app.listen(port, () => {
     console.log(`Backend server listening on port ${port}`);
 });
